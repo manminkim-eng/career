@@ -1,0 +1,15 @@
+{
+  "name": "김만민 건축사 · 경력 종합 대시보드",
+  "short_name": "경력 대시보드",
+  "description": "설계·감리·안전진단·VE·협회실적·법정교육 통합관리",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#1e2740",
+  "theme_color": "#1e2740",
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "assets/icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

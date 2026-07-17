@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>김만민 건축사 · 경력 종합 대시보드</title>
+<link rel="icon" href="assets/icons/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/icon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/icons/icon-16.png">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1e2740">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="경력 대시보드">
+<style>
+:root{--navy:#16294d;--blue:#2a4b8d;--gold:#c8a94b;--copper:#cf9068;--copper-d:#b06f45;--ink:#1c2430;--mut:#6b7684;--line:#e4e8ef;--bg:#f5f7fb;
+--c-설계:#2a6fd6;--c-감리:#12a19a;--c-안전진단:#e3663e;--c-VE:#7a5cc6;--c-CM:#d9a406;--c-유지관리:#5b8c5a;--c-기타:#9aa4b2;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Malgun Gothic','맑은 고딕',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;font-size:14px}
+.wrap{max-width:1200px;margin:0 auto;padding:0 16px}
+header{background:linear-gradient(135deg,#1a2136,#2b3452 60%,#33405f);color:#fff;padding:20px 0;position:relative;overflow:hidden}
+header::before{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,rgba(207,144,104,.06) 0 1px,transparent 1px 46px),repeating-linear-gradient(0deg,rgba(207,144,104,.05) 0 1px,transparent 1px 46px);pointer-events:none}
+header .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;position:relative;z-index:1}
+.brand{display:flex;align-items:center;gap:16px}
+.logo{height:58px;width:auto}
+.logo-fb{display:none;width:70px;height:70px;border:1.5px solid var(--copper);border-radius:10px;align-items:center;justify-content:center;background:rgba(207,144,104,.08)}
+.brand .en{font-size:12.5px;letter-spacing:3.5px;font-weight:700;color:var(--copper)}
+.brand .en b{color:#fff;letter-spacing:2px}
+header h1{font-size:21px;font-weight:800;letter-spacing:-.5px;margin-top:2px}
+header h1 b{color:var(--copper)}
+header .sub{font-size:12px;opacity:.82;margin-top:4px}
+header .meta{font-size:11.5px;opacity:.8;text-align:right}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:18px 0}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 12px;text-align:center;box-shadow:0 1px 3px rgba(20,40,80,.05)}
+.kpi .n{font-size:24px;font-weight:800;color:var(--navy)}
+.kpi .l{font-size:11.5px;color:var(--mut);margin-top:3px}
+.kpi .u{font-size:11px;color:var(--gold);font-weight:700}
+nav.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:2px solid var(--line);margin-bottom:16px}
+nav.tabs button{background:none;border:none;padding:10px 16px;font-size:14px;font-weight:700;color:var(--mut);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+nav.tabs button.on{color:var(--navy);border-bottom-color:var(--gold)}
+.panel{display:none;animation:fade .25s}
+.panel.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px;box-shadow:0 1px 3px rgba(20,40,80,.04)}
+.card h2{font-size:16px;color:var(--navy);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card h2 .cnt{font-size:12px;color:var(--mut);font-weight:600}
+h3.sec{font-size:13px;color:var(--blue);margin:14px 0 8px;font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#f0f3f9;color:var(--navy);font-weight:700;position:sticky;top:0;font-size:11.5px}
+tr:hover td{background:#fafbfe}
+.tbl-scroll{max-height:520px;overflow:auto;border:1px solid var(--line);border-radius:8px}
+.tag{display:inline-block;padding:1px 8px;border-radius:20px;font-size:11px;font-weight:700;color:#fff}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.bar-row{display:flex;align-items:center;gap:8px;margin:5px 0}
+.bar-row .lab{width:76px;font-size:12px;font-weight:700}
+.bar-track{flex:1;background:#eef1f6;border-radius:6px;height:20px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;color:#fff;font-size:11px;font-weight:700}
+.yearbar{display:flex;height:22px;border-radius:4px;overflow:hidden;background:#eef1f6}
+.yearbar span{height:100%}
+.ylegend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;margin:6px 0 14px}
+.ylegend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.searchbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.searchbar input,.searchbar select{padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-size:13px}
+.searchbar input{flex:1;min-width:220px}
+.progress{background:#eef1f6;border-radius:8px;height:26px;overflow:hidden;position:relative}
+.progress>div{height:100%;background:linear-gradient(90deg,#12a19a,#2a6fd6);display:flex;align-items:center;padding-left:10px;color:#fff;font-weight:700;font-size:12px}
+.progress.warn>div{background:linear-gradient(90deg,#e3663e,#d9a406)}
+.assoc{border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:10px}
+.assoc h4{font-size:14px;color:var(--navy);margin-bottom:4px}
+.assoc .row{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--mut);margin-top:4px}
+.assoc a{color:var(--blue);text-decoration:none;font-weight:700}
+.assoc a:hover{text-decoration:underline}
+.pill{font-size:11px;padding:2px 9px;border-radius:20px;font-weight:700}
+.pill.ok{background:#e5f4ea;color:#1c7a3e}.pill.due{background:#fdeee6;color:#c1521f}.pill.na{background:#eef1f6;color:#6b7684}
+.muted{color:var(--mut);font-size:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.gridwrap{overflow-x:auto;border:1px solid var(--line);border-radius:6px;margin-bottom:10px}
+.gridtbl{border-collapse:collapse;font-size:11px;min-width:100%;white-space:nowrap}
+.gridtbl td{border:1px solid #d5dbe6;padding:3px 6px;vertical-align:middle;text-align:center;max-width:220px;overflow:hidden;text-overflow:ellipsis}
+.gridtbl tr:first-child td{background:#16294d;color:#fff;font-weight:700;font-size:12px;text-align:left}
+.gridtbl tr:nth-child(2) td{background:#eef2f9;font-weight:700}
+.subnav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.subnav button{background:#eef2f9;border:1px solid var(--line);border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:var(--blue);cursor:pointer}
+.subnav button.on{background:var(--navy);color:#fff}
+.subsec{display:none}.subsec.on{display:block}
+.chkitem{padding:8px 12px;border-left:3px solid var(--gold);background:#fbfaf4;border-radius:0 6px 6px 0;margin:6px 0;font-size:13px}
+
+.viewbtn{display:inline-block;background:var(--navy);color:#fff;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;margin-right:6px}
+.viewbtn.alt{background:#fff;color:var(--navy);border:1px solid var(--line)}
+#viewer{display:none;position:fixed;inset:0;z-index:1000;background:rgba(12,18,32,.94);flex-direction:column}
+#viewer.on{display:flex}
+#viewer .vbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px}
+#viewer .vt{color:#fff;font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+#viewer .vbar a,#viewer .vbar button{color:#fff;background:rgba(255,255,255,.16);border:none;border-radius:8px;padding:9px 13px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap}
+#viewer .vbody{flex:1;min-height:0}
+#viewer iframe,#viewer img{width:100%;height:100%;border:0;background:#fff}
+#viewer img{object-fit:contain}
+@media(max-width:760px){
+  .wrap{padding:0 12px}
+  nav.tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:2px}
+  nav.tabs button{padding:11px 13px;white-space:nowrap;flex:0 0 auto;font-size:13.5px}
+  nav.tabs::-webkit-scrollbar{height:0}
+  .kpis{grid-template-columns:repeat(2,1fr)!important;gap:8px}
+  .kpi .n{font-size:20px}
+  .card{padding:14px}
+  .card table{display:block;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
+  .bar-row .lab{width:auto!important;min-width:56px;font-size:11px}
+  .subnav{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch}
+  .subnav button{flex:0 0 auto;white-space:nowrap}
+  .logo{height:46px}
+  header .wrap{align-items:center}
+  header h1{font-size:17px}
+  header .brand .en{font-size:11px;letter-spacing:2px}
+  header .meta{font-size:10.5px}
+  .searchbar input{min-width:0;width:100%}
+}
+
+footer{text-align:center;color:var(--mut);font-size:11.5px;padding:22px 0}
+@media(max-width:820px){.kpis{grid-template-columns:repeat(3,1fr)}.grid2{grid-template-columns:1fr}}
+@media print{nav.tabs,.searchbar{display:none}.panel{display:block!important}header{background:var(--navy)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="brand">
+    <img class="logo" id="logoImg" src="assets/logo/logo.png" alt="ARCHITECT KIM MANMIN"
+         onerror="this.style.display='none';document.getElementById('logoFb').style.display='flex'">
+    <div class="logo-fb" id="logoFb"><svg viewBox="0 0 64 64" width="46" height="46" fill="none" stroke="#cf9068" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 55V23L32 9l19 14v32"/><path d="M22 55V31h20v24"/><line x1="9" y1="55" x2="55" y2="55"/><line x1="32" y1="9" x2="32" y2="31"/><line x1="13" y1="35" x2="51" y2="35"/></svg></div>
+    <div class="brand-txt">
+      <h1>경력 종합 대시보드</h1>
+      <div class="sub">설계 · 감리 · 안전진단 · VE · 협회실적 · 법정교육 통합관리 &nbsp;|&nbsp; ㈜대성건축사사무소</div>
+    </div>
+  </div>
+  <div class="meta" id="meta">불러오는 중…</div>
+</div></header>
+<div id="viewer"><div class="vbar"><span class="vt" id="vt"></span><a id="vopen" href="#" target="_blank">새 창 ↗</a><button onclick="closeViewer()">닫기 ✕</button></div><div class="vbody" id="vbody"></div></div>
+
+<div class="wrap">
+  <div class="kpis" id="kpis"></div>
+  <nav class="tabs" id="tabs"></nav>
+
+  <div class="panel on" id="p-종합"></div>
+  <div class="panel" id="p-설계"></div>
+  <div class="panel" id="p-감리"></div>
+  <div class="panel" id="p-안전진단"></div>
+  <div class="panel" id="p-VE"></div>
+  <div class="panel" id="p-경력관리"></div>
+  <div class="panel" id="p-분기점검"></div>
+  <div class="panel" id="p-협회교육"></div>
+  <div class="panel" id="p-검색"></div>
+
+  <footer>데이터 출처: 만민경력DATE 마스터 엑셀 · 분기(1·4·7·10월) 갱신 · 본 대시보드는 개인 관리용입니다.</footer>
+</div>
+
+<script src="data/career-data.js"></script>
+<script src="data/certs-data.js"></script>
+<script>
+const CAT_COLORS={설계:'#2a6fd6',감리:'#12a19a',안전진단:'#e3663e',VE:'#7a5cc6',CM:'#d9a406',유지관리:'#5b8c5a',기타:'#9aa4b2'};
+const won=n=>n==null?'':'₩'+Number(n).toLocaleString();
+const esc=s=>(s==null?'':String(s)).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+
+// ── 협회별 관리 레지스트리 (근거자료: 02.경력증명 하위 폴더) ──
+const ASSOC=[
+ {name:'대한건축사협회',manage:'건축사 자격·실무교육(40h/5년)·설계/감리 실적증명',cycle:'실무교육 5년주기',
+  ev:'02.경력증명/대한건축사협회',url:'https://www.kira.or.kr',status:['ok','자격 갱신완료(2026-02-22)']},
+ {name:'한국건설기술인협회',manage:'건설기술경력증·역량지수 등급(건축/기계/토목/안전 특급~초급)',cycle:'계속교육 3년',
+  ev:'02.경력증명/한국건설기술인협회',url:'https://www.kpea.or.kr',status:['ok','건축·기계 특급']},
+ {name:'한국엔지니어링협회',manage:'엔지니어링 기술자 경력(설비 특급·건설구조 고급)',cycle:'수시 신고',
+  ev:'02.경력증명/한국엔지니어링협회',url:'https://www.kenca.or.kr',status:['ok','최신 2026-05']},
+ {name:'한국건설기술관리협회',manage:'감리원 경력 관리',cycle:'수시',
+  ev:'02.경력증명/한국건설기술관리협회',url:'https://www.cem.or.kr',status:['na','아카이브']},
+ {name:'한국소방시설협회',manage:'소방기술자 경력(기계/전기 특급)·실무교육',cycle:'실무교육 2년',
+  ev:'02.경력증명/한국소방시설협회',url:'https://www.kfsa.or.kr',status:['ok','2025-06 이수']},
+ {name:'국토안전관리원',manage:'시설물 안전점검·정밀안전진단 실적·보수교육',cycle:'보수교육 3년',
+  ev:'02.경력증명/안전진단',url:'https://www.kalis.or.kr',status:['ok','2025-07 이수']},
+ {name:'SAVE / SKVM (VE)',manage:'국제공인 VE전문가(CVS)·가치혁신전문가(VMP) 인증유지',cycle:'재인증 4년(140PDU)',
+  ev:'02.경력증명/SAVM',url:'https://www.value-eng.org',status:['due','재인증 진행 40/140PDU']},
+];
+
+function el(id){return document.getElementById(id);}
+function tag(cat){return `<span class="tag" style="background:${CAT_COLORS[cat]||'#9aa4b2'}">${cat}</span>`;}
+
+function boot(D){
+ window._PUB=!!D.meta.public; window._S=D.summary;
+ // meta
+ el('meta').innerHTML=`데이터: <b>${esc(D.meta.source)}</b><br>갱신 ${esc(D.meta.generated)} · 총 ${D.meta.record_count}건`+(D.meta.public?'<br><span style="color:#ffd77a">공개 요약본</span>':'');
+ // KPI
+ const s=D.summary;
+ const kpi=[['총 경력레코드',s.total_records,'건'],['설계 실적',s.design_count,'건'],['감리 실적',s.supervision_count,'건'],
+  ['안전진단',s.safety_count,'건'],['VE 수행',s.ve_count,'건'],['관리연도',s.years.length,'개년']];
+ el('kpis').innerHTML=kpi.map(k=>`<div class="kpi"><div class="n">${k[1]}</div><div class="l">${k[0]} <span class="u">${k[2]}</span></div></div>`).join('');
+ // tabs
+ let TABS=[['종합','종합'],['경력관리','경력관리'],['분기점검','분기점검'],['설계','설계'],['감리','감리'],['안전진단','안전진단'],['VE','VE'],['협회교육','협회·교육'],['검색','통합검색']];
+ if(D.meta.public){TABS=TABS.filter(t=>t[0]!=='검색'&&t[0]!=='경력관리'&&t[0]!=='분기점검');}
+ el('tabs').innerHTML=TABS.map((t,i)=>`<button class="${i==0?'on':''}" data-t="${t[0]}">${t[1]}</button>`).join('');
+ el('tabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;
+  document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));el('p-'+b.dataset.t).classList.add('on');};
+
+ renderOverview(D); renderAchieve('설계',D.design,D); renderAchieve('감리',D.supervision,D);
+ renderRecords('안전진단',D.safety); renderRecords('VE',D.ve); renderCareerMgmt(window.CERTS_DATA); renderQuarterly(window.CERTS_DATA, D); renderAssocEdu(D); renderSearch(D);
+}
+
+function renderOverview(D){
+ const s=D.summary, cats=s.by_category;
+ const max=Math.max(...Object.values(cats));
+ const bars=Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([c,n])=>
+  `<div class="bar-row"><div class="lab">${c}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.max(8,n/max*100)}%;background:${CAT_COLORS[c]||'#9aa4b2'}">${n}</div></div></div>`).join('');
+ // 연도별 스택
+ const catKeys=Object.keys(CAT_COLORS);
+ const years=s.years;
+ const ymax=Math.max(...years.map(y=>Object.values(D.by_year[y]).reduce((a,b)=>a+b,0)));
+ const yrows=years.slice().reverse().map(y=>{
+   const yd=D.by_year[y];const tot=Object.values(yd).reduce((a,b)=>a+b,0);
+   const segs=catKeys.filter(c=>yd[c]).map(c=>`<span title="${y} ${c} ${yd[c]}건" style="width:${yd[c]/ymax*100}%;background:${CAT_COLORS[c]}"></span>`).join('');
+   return `<div class="bar-row"><div class="lab" style="width:52px">${y}</div><div class="yearbar" style="flex:1">${segs}</div><div style="width:38px;text-align:right;font-weight:700">${tot}</div></div>`;
+ }).join('');
+ const legend=catKeys.map(c=>`<span><i style="background:${CAT_COLORS[c]}"></i>${c}</span>`).join('');
+ el('p-종합').innerHTML=`
+  <div class="grid2">
+   <div class="card"><h2>영역별 경력 분포 <span class="cnt">총 ${s.total_records}건</span></h2>${bars}
+     <p class="muted" style="margin-top:10px">※ 마스터 로그 담당업무 기준 자동분류. 설계실적/감리실적 집계표는 각 탭 참조.</p></div>
+   <div class="card"><h2>자격·등급 요약</h2>
+     <table><tr><th>구분</th><th>등급/현황</th></tr>
+     <tr><td>건축사</td><td>자격 #20072 · 등록 13753 · 3차주기(~2031-02-22)</td></tr>
+     <tr><td>건설기술인</td><td>건축 특급 · 기계 특급 · 토목/안전 초급</td></tr>
+     <tr><td>건설사업관리</td><td>건축 특급 · 기계 특급</td></tr>
+     <tr><td>엔지니어링</td><td>설비 특급 · 건설(구조) 고급</td></tr>
+     <tr><td>소방기술자</td><td>기계 특급 · 전기 특급</td></tr>
+     <tr><td>VE</td><td>국제공인 CVS · VMP</td></tr></table></div>
+  </div>
+  <div class="card"><h2>연도별 경력 추이</h2><div class="ylegend">${legend}</div>${yrows}</div>`;
+}
+
+function renderAchieve(cat,rows,D){
+ const totAmt=rows.reduce((a,r)=>a+(r.amount||0),0);
+ const totArea=rows.reduce((a,r)=>a+(r.area||0),0);
+ const body=rows.map(r=>`<tr><td class="num">${r.no}</td><td>${esc(r.name)}</td><td>${esc(r.use)}</td>
+   <td>${esc(r.type)}</td><td class="num">${window._PUB?'—':won(r.amount)}</td><td class="num">${r.area?r.area.toLocaleString():''}</td>
+   <td>${esc(r.period)}</td></tr>`).join('');
+ el('p-'+cat).innerHTML=`
+  <div class="card"><h2>${cat} 실적집계 <span class="cnt">${rows.length}건 · ${window._PUB?'':'용역금액 합계 '+won(totAmt)+' · '}연면적 ${Math.round(totArea).toLocaleString()}㎡</span></h2>
+   <div class="searchbar"><input type="text" placeholder="용역명·용도 검색" oninput="filt(this,'${cat}')"></div>
+   <div class="tbl-scroll"><table><thead><tr><th>NO</th><th>용역명</th><th>주용도</th><th>구분</th><th>용역금액</th><th>연면적㎡</th><th>기간</th></tr></thead>
+   <tbody id="tb-${cat}">${body}</tbody></table></div>
+   <p class="muted" style="margin-top:8px">근거: 대한건축사협회 실적증명 · 02.경력증명 아카이브</p></div>`;
+}
+
+function renderRecords(cat,rows){
+ if(window._PUB){el('p-'+cat).innerHTML=`<div class="card"><h2>${cat} 수행경력 <span class="cnt">${(cat==='안전진단'?window._S.safety_count:window._S.ve_count)}건</span></h2><p class="muted">공개 요약본에서는 개별 상세가 비공개입니다. 건수·연도별 통계는 <b>종합</b> 탭을 참고하세요.</p></div>`;return;}
+ const years=[...new Set(rows.map(r=>r.year).filter(Boolean))].sort((a,b)=>b-a);
+ const opt=years.map(y=>`<option>${y}</option>`).join('');
+ const body=rows.map(r=>`<tr data-y="${r.year}"><td class="num">${r.seq}</td><td>${esc(r.start)}~${esc(r.end)}</td>
+   <td>${esc(r.name)}</td><td>${esc(r.client)}</td><td>${esc(r.subfield||r.field)}</td><td>${esc(r.duty)}</td></tr>`).join('');
+ el('p-'+cat).innerHTML=`
+  <div class="card"><h2>${cat} 수행경력 <span class="cnt">${rows.length}건</span></h2>
+   <div class="searchbar"><input type="text" placeholder="용역명·발주처 검색" oninput="filtR('${cat}',this.value)">
+     <select onchange="filtY('${cat}',this.value)"><option value="">전체 연도</option>${opt}</select></div>
+   <div class="tbl-scroll"><table><thead><tr><th>순번</th><th>기간</th><th>용역명</th><th>발주처</th><th>분야</th><th>담당업무</th></tr></thead>
+   <tbody id="tb-${cat}">${body}</tbody></table></div></div>`;
+}
+
+function renderAssocEdu(D){
+ const eduOrder=['1차','2차','3차'];
+ const eduCards=eduOrder.filter(c=>D.education[c]).map(c=>{
+  const e=D.education[c];const pct=Math.min(100,Math.round(e.total/e.req_total*100));
+  const done=e.remaining===0;
+  return `<div class="assoc"><h4>건축사 실무교육 ${c} <span class="pill ${done?'ok':'due'}">${done?'이수완료':'진행 '+e.total+'/'+e.req_total+'h'}</span></h4>
+   <div class="muted">주기: ${esc(e.reg_date)} ~ ${esc(e.renew_date||'')}</div>
+   <div class="progress ${done?'':'warn'}" style="margin-top:6px"><div style="width:${Math.max(6,pct)}%">${e.total}/${e.req_total}h (${pct}%)</div></div>
+   <div class="row"><span>윤리 ${e.ethics}/${e.req_ethics}</span><span>전문 ${e.expert}/${e.req_expert}</span><span>자기계발 ${e.selfdev}/${e.req_selfdev}</span></div></div>`;
+ }).join('');
+ const assocRows=ASSOC.map(a=>`<div class="assoc">
+   <h4>${esc(a.name)} <span class="pill ${a.status[0]}">${esc(a.status[1])}</span></h4>
+   <div>${esc(a.manage)}</div>
+   <div class="row"><span>🗓 ${esc(a.cycle)}</span><span>📁 ${esc(a.ev)}</span><a href="${a.url}" target="_blank">협회 포털 ↗</a></div></div>`).join('');
+ el('p-협회교육').innerHTML=`
+  <div class="card"><h2>법정 교육 이수현황 <span class="cnt">건축사 실무교육 40h/5년</span></h2>${eduCards}
+    <div class="assoc"><h4>기타 법정교육 <span class="pill ok">양호</span></h4>
+     <div class="row"><span>건설기술인 계속교육(3년)</span><span>소방기술자 실무교육 2025-06</span><span>안전진단 보수교육 2025-07</span></div></div></div>
+  <div class="card"><h2>협회별 실적·자격 관리 <span class="cnt">${ASSOC.length}개 기관</span></h2>
+    <p class="muted" style="margin-bottom:10px">각 기관 근거자료는 <b>02.경력증명</b> 폴더 하위에 아카이브. 포털 링크로 직접 확인.</p>${assocRows}</div>`;
+}
+
+
+// ── 경력관리(02.경력증명 원본 기반) ──
+const CAT_ICON={경력:'📄',자격:'🎖',교육:'🎓',학력:'🏫'};
+function jstr(s){return String(s).replace(/\\/g,"\\\\").replace(/'/g,"\\'");}
+function certRow(it){
+ const oc=it.ocr_text?`<details style="margin-top:6px"><summary class="muted" style="cursor:pointer">OCR 본문 보기</summary><pre style="white-space:pre-wrap;font-size:11.5px;background:#f7f9fc;border:1px solid var(--line);border-radius:6px;padding:8px;margin-top:6px">${esc(it.ocr_text)}</pre></details>`:'';
+ return `<div class="assoc" data-txt="${esc((it.title+' '+it.assoc).toLowerCase())}">
+   <h4>${esc(it.title)} ${it.date?`<span class="pill ok">${esc(it.date)}</span>`:''}</h4>
+   <div class="row"><span>🏛 ${esc(it.assoc)}</span><span>📁 ${esc(it.name)}</span></div>
+   <div class="row" style="margin-top:8px">
+     <button class="viewbtn" onclick="openViewer('${jstr(it.file)}','${jstr(it.title)}')">🔍 크게 보기</button>
+     <a class="viewbtn alt" href="${it.file}" target="_blank">원본 열기 ↗</a></div>
+   ${oc}</div>`;
+}
+function openViewer(url,title){
+ const v=document.getElementById('viewer');
+ document.getElementById('vt').textContent=title||'';
+ document.getElementById('vopen').href=url;
+ const body=document.getElementById('vbody');
+ body.innerHTML = /\.(png|jpe?g|webp|gif)$/i.test(url)
+   ? `<img src="${url}">` : `<iframe src="${url}"></iframe>`;
+ v.classList.add('on'); document.body.style.overflow='hidden';
+}
+function closeViewer(){const v=document.getElementById('viewer');v.classList.remove('on');document.getElementById('vbody').innerHTML='';document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeViewer();});
+function renderCareerMgmt(C){
+ const p=el('p-경력관리');
+ if(!C||!C.categories){p.innerHTML='<div class="card"><h2>경력관리</h2><p class="muted">certs-data.js 가 없습니다. <b>python build_certs.py</b> 실행 후 다시 여세요.</p></div>';return;}
+ const order=['경력','자격','교육','학력'];
+ const cats=order.filter(k=>C.categories[k]&&C.categories[k].length);
+ const nav=`<div class="subnav">${cats.map((k,i)=>`<button class="${i==0?'on':''}" data-s="${k}">${CAT_ICON[k]} ${k} (${C.categories[k].length})</button>`).join('')}</div>`;
+ const secs=cats.map((k,i)=>{
+   const items=C.categories[k];
+   const searchBox=items.length>6?`<div class="searchbar"><input type="text" placeholder="${k} 문서 검색" oninput="filtCerts('${k}',this.value)"></div>`:'';
+   return `<div class="subsec ${i==0?'on':''}" id="cm-${k}"><div class="card"><h2>${CAT_ICON[k]} ${k} <span class="cnt">${items.length}건 · 최신 원본</span></h2>
+     ${searchBox}<div id="cert-${k}">${items.map(certRow).join('')}</div></div></div>`;
+ }).join('');
+ const note=`<p class="muted" style="margin:2px 0 12px">데이터: 02.경력증명 폴더의 협회별 최신 증명서 자동선택 · 생성 ${esc(C.generated||'')} ${C.ocr?'· OCR 본문 포함':'· 원본 PDF 링크(‌OCR 미적용)'}</p>`;
+ p.innerHTML=note+nav+secs;
+ p.querySelector('.subnav').onclick=e=>{const b=e.target.closest('button');if(!b)return;
+   p.querySelectorAll('.subnav button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+   p.querySelectorAll('.subsec').forEach(x=>x.classList.remove('on'));el('cm-'+b.dataset.s).classList.add('on');};
+}
+function filtCerts(k,q){q=q.toLowerCase();document.querySelectorAll('#cert-'+k+' .assoc').forEach(d=>{d.style.display=d.dataset.txt.includes(q)?'':'none';});}
+
+
+function _parseDate(s){ if(!s) return null; const m=String(s).match(/(\d{4})[-.](\d{1,2})(?:[-.](\d{1,2}))?/); if(!m) return null; return new Date(+m[1],(+m[2])-1,+(m[3]||1)); }
+function _addYears(d,y){ const n=new Date(d); n.setFullYear(n.getFullYear()+y); return n; }
+function _monthsBetween(a,b){ return (b.getFullYear()-a.getFullYear())*12 + (b.getMonth()-a.getMonth()); }
+function _statusPill(nextDue){ if(!nextDue) return '<span class="pill na">확인필요</span>'; const now=new Date(); const mo=_monthsBetween(now,nextDue); if(mo<0) return '<span class="pill due">기한초과</span>'; if(mo<=6) return `<span class="pill due">임박 ${mo}개월</span>`; return `<span class="pill ok">양호</span>`; }
+
+function renderQuarterly(C, D){
+ const p=el('p-분기점검');
+ const cfg=(C&&C.config)||{};
+ if(!cfg.법정교육){
+   const q=C&&C.quarterly;
+   p.innerHTML=`<div class="card"><h2>분기 종합점검</h2><p class="muted">config.json 이 없습니다. build_certs.py 실행 후 다시 여세요.</p>${q?`<a href="${q.file}" target="_blank">기존 보고서 열기 ↗</a>`:''}</div>`;
+   return;
+ }
+ const edu=(D&&D.education)||{};
+ const sec={};
+
+ // ── 종합요약 ──
+ const s=cfg.요약||{};
+ const e3=edu['3차'];
+ const kpi=[['총 환산경력',`${(s.환산경력일||0).toLocaleString()}일`,`약 ${s.환산경력년||''}년`],
+   ['보유 자격',`${s.자격종수||cfg.자격현황.length}종`,'+CVS·VMP'],
+   ['교육 인정',`${(s.교육인정시간||0).toLocaleString()}h`,`수료증 ${s.수료증건수||''}건`],
+   ['안전점검',(cfg.PQ&&cfg.PQ.안전점검?cfg.PQ.안전점검.건수:''),'수행']];
+ let alerts='';
+ if(e3){ const done=e3.remaining===0; alerts+=`<div class="chkitem">${done?'✅':'🟡'} 건축사 실무교육 3차 주기 ${e3.total}/${e3.req_total}h ${done?'이수완료':'— 이수 필요(윤리'+e3.ethics+'·전문'+e3.expert+'·자기계발'+e3.selfdev+')'}</div>`; }
+ (cfg.법정교육||[]).forEach(l=>{ const nd=_addYears(_parseDate(l.최근이수),l.주기년||0); const mo=_monthsBetween(new Date(),nd); if(mo<=6) alerts+=`<div class="chkitem">🟡 ${esc(l.구분)} — 갱신 임박/초과 (기한 ${nd.getFullYear()}-${String(nd.getMonth()+1).padStart(2,'0')})</div>`; });
+ sec['종합']=`<div class="card"><h2>종합 요약 <span class="cnt">${esc(cfg.quarter||'')}</span></h2>
+   <div class="kpis" style="margin:0 0 14px">${kpi.map(k=>`<div class="kpi"><div class="n" style="font-size:20px">${k[1]}</div><div class="l">${k[0]} <span class="u">${k[2]}</span></div></div>`).join('')}</div>
+   <h3 class="sec">이번 분기 핵심 점검</h3>${alerts||'<div class="chkitem">✅ 주요 항목 양호</div>'}</div>`;
+
+ // ── 법정교육·자격갱신 ──
+ let eduRows='';
+ ['1차','2차','3차'].forEach(c=>{ const x=edu[c]; if(!x) return; const done=x.remaining===0; const pct=Math.min(100,Math.round(x.total/x.req_total*100));
+   eduRows+=`<tr><td>건축사 실무교육 ${c}</td><td>${esc(x.reg_date||'')}~${esc(x.renew_date||'')}</td><td class="num">${x.total}/${x.req_total}h</td><td>${done?'<span class="pill ok">이수완료</span>':`<span class="pill due">진행 ${pct}%</span>`}</td></tr>`; });
+ let lawRows=(cfg.법정교육||[]).map(l=>{ const nd=_addYears(_parseDate(l.최근이수),l.주기년||0);
+   return `<tr><td>${esc(l.구분)}</td><td class="muted" style="font-size:11px">${esc(l.근거)}</td><td>${esc(l.주기)}</td><td>${esc(l.최근이수)}</td><td>${_statusPill(nd)}</td></tr>`; }).join('');
+ let posRows=(cfg.위촉직||[]).map(w=>{ const nd=_parseDate(w.임기만료); return `<tr><td>${esc(w.직위)}</td><td>${esc(w.임기시작)}~${esc(w.임기만료)}</td><td>${_statusPill(nd)}</td></tr>`; }).join('');
+ sec['법정교육']=`<div class="card"><h2>⚠ 법정교육 · 자격 갱신 점검</h2>
+   <h3 class="sec">건축사 실무교육 이수현황 (엑셀 자동)</h3>
+   <table><thead><tr><th>구분</th><th>주기</th><th>이수</th><th>상태</th></tr></thead><tbody>${eduRows}</tbody></table>
+   <h3 class="sec">법정 계속·보수교육 (최근이수+주기 자동판정, 오늘 기준)</h3>
+   <table><thead><tr><th>구분</th><th>근거법령</th><th>주기</th><th>최근이수</th><th>상태</th></tr></thead><tbody>${lawRows}</tbody></table>
+   <h3 class="sec">위촉직 임기</h3>
+   <table><thead><tr><th>직위</th><th>임기</th><th>상태</th></tr></thead><tbody>${posRows}</tbody></table></div>`;
+
+ // ── 자격·등급 현황판 ──
+ let qRows=(cfg.자격현황||[]).map(q=>`<tr><td>${esc(q.종목)}</td><td>${esc(q.취득)}</td><td>${esc(q.설시)}</td><td>${esc(q.cm감리)}</td><td>${esc(q.품질)}</td><td>${esc(q.분야)}</td></tr>`).join('');
+ let fRows=(cfg.전문분야||[]).map(f=>`<tr><td>${esc(f.분야)}</td><td class="num">${(f.일수||0).toLocaleString()}</td><td>${esc(f.등급)}</td><td class="muted">${esc(f.근거||'')}</td></tr>`).join('');
+ sec['자격등급']=`<div class="card"><h2>자격 · 등급 현황판 <span class="cnt">국가자격 10종 + 국제인증 2종</span></h2>
+   <table><thead><tr><th>종목</th><th>취득일</th><th>설·시</th><th>CM·감리</th><th>품질</th><th>분야</th></tr></thead><tbody>${qRows}</tbody></table>
+   <h3 class="sec">전문분야별 등급 · 인정일수</h3>
+   <table><thead><tr><th>전문분야</th><th>인정일수</th><th>등급</th><th>근거</th></tr></thead><tbody>${fRows}</tbody></table></div>`;
+
+ // ── 교육이수 분석 (수료증 자동) ──
+ const eduCerts=((C.categories&&C.categories.교육)||[]).filter(x=>x.assoc==='교육수료');
+ const byYear={}; eduCerts.forEach(x=>{ const y=(x.date||'').slice(0,4); if(y) byYear[y]=(byYear[y]||0)+1; });
+ const ys=Object.keys(byYear).sort(); const ymax=Math.max(1,...Object.values(byYear));
+ const yearBars=ys.map(y=>`<div class="bar-row"><div class="lab" style="width:52px">${y}</div><div class="bar-track"><div class="bar-fill" style="width:${byYear[y]/ymax*100}%;background:var(--blue)">${byYear[y]}</div></div></div>`).join('');
+ const recent=eduCerts.filter(x=>x.date).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,12)
+   .map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.title)}</td><td><a href="${x.file}" target="_blank">원본 ↗</a></td></tr>`).join('');
+ sec['교육분석']=`<div class="card"><h2>교육이수 이력 · 분석 <span class="cnt">수료증 ${eduCerts.length}건 · 인정 ${(s.교육인정시간||0).toLocaleString()}h</span></h2>
+   <h3 class="sec">연도별 교육 이수 건수 (수료증 파일 자동집계)</h3>${yearBars||'<p class="muted">-</p>'}
+   <h3 class="sec">최근 교육 이수 이력</h3>
+   <table><thead><tr><th>이수(연월)</th><th>교육명</th><th>원본</th></tr></thead><tbody>${recent}</tbody></table></div>`;
+
+ // ── PQ 입찰 경력 점검 ──
+ const P=cfg.PQ||{};
+ let cmpRows=(P.분야비교||[]).map(r=>`<tr><td>${esc(r.구분)}</td><td class="num">${r.건축?r.건축.toLocaleString():''}</td><td class="num">${r.기계?r.기계.toLocaleString():''}</td><td>${esc(r.등급)}</td><td class="muted">${esc(r.점수||'')}</td></tr>`).join('');
+ const kmax=Math.max(1,...(P.공사종류||[]).map(x=>x.일수));
+ let kindBars=(P.공사종류||[]).map(k=>`<div class="bar-row"><div class="lab" style="width:130px;font-size:11px">${esc(k.종류)}</div><div class="bar-track"><div class="bar-fill" style="width:${k.일수/kmax*100}%;background:var(--c-설계)">${k.일수.toLocaleString()}</div></div></div>`).join('');
+ const dmax=Math.max(1,...(P.담당업무||[]).map(x=>x.일수));
+ let dutyBars=(P.담당업무||[]).map(k=>`<div class="bar-row"><div class="lab" style="width:150px;font-size:11px">${esc(k.업무)}</div><div class="bar-track"><div class="bar-fill" style="width:${k.일수/dmax*100}%;background:var(--c-감리)">${k.일수.toLocaleString()}</div></div></div>`).join('');
+ sec['PQ']=`<div class="card"><h2>PQ 입찰 경력 점검 <span class="cnt">기준일 ${esc(P.asof||cfg.asof||'')}</span></h2>
+   <h3 class="sec">건축 vs 기계 분야 인정일수</h3>
+   <table><thead><tr><th>구분</th><th>건축</th><th>기계</th><th>등급</th><th>점수</th></tr></thead><tbody>${cmpRows}</tbody></table>
+   <h3 class="sec">건축 공사종류별 인정일수 (상위)</h3>${kindBars}
+   <h3 class="sec">담당업무별 인정일수</h3>${dutyBars}
+   ${P.안전점검?`<h3 class="sec">시설물 안전점검 실적</h3><p class="muted">누적 참여일수 ${(P.안전점검.참여일수||0).toLocaleString()}일 · ${esc(P.안전점검.건수||'')}</p>`:''}</div>`;
+
+ // ── 분기 체크리스트 (자동 액션) ──
+ let chk=[];
+ if(e3&&e3.remaining>0) chk.push(`🟡 [최우선] 건축사 실무교육 3차 ${e3.total}/${e3.req_total}h — 평균 8h/년 이수(윤리${e3.ethics}·전문${e3.expert}·자기계발${e3.selfdev})`);
+ (cfg.법정교육||[]).forEach(l=>{ const nd=_addYears(_parseDate(l.최근이수),l.주기년||0); const mo=_monthsBetween(new Date(),nd); if(mo<=6) chk.push(`🟡 ${l.구분} 갱신 임박/초과 — 기한 ${nd.getFullYear()}-${String(nd.getMonth()+1).padStart(2,'0')}`); });
+ (cfg.위촉직||[]).forEach(w=>{ const nd=_parseDate(w.임기만료); const mo=_monthsBetween(new Date(),nd); if(mo<=6&&mo>=0) chk.push(`🟡 ${w.직위} 임기만료 임박(${w.임기만료}) — 연임/재위촉 검토`); });
+ chk.push('🔵 [경력] 새 엑셀(VER↑) → A.경력자료 저장 후 대시보드_갱신.bat 실행');
+ chk.push('🔵 [증명서] 신규 발급 협회 증명서 → 02.경력증명 해당 폴더 저장');
+ chk.push('🔵 [PQ·홍보] config.json 인정일수·등급 최신화(연 1~2회)');
+ sec['체크리스트']=`<div class="card"><h2>분기 점검 체크리스트 <span class="cnt">자동 생성</span></h2>${chk.map(c=>`<div class="chkitem">${esc(c)}</div>`).join('')}</div>`;
+
+ // 서브탭 조립
+ const order=['종합','법정교육','자격등급','교육분석','PQ','체크리스트'];
+ const labels={종합:'종합요약','법정교육':'법정교육·갱신',자격등급:'자격·등급',교육분석:'교육이수분석',PQ:'PQ 입찰점검',체크리스트:'분기 체크리스트'};
+ const nav=`<div class="subnav">${order.map((k,i)=>`<button class="${i==0?'on':''}" data-s="${k}">${labels[k]}</button>`).join('')}</div>`;
+ const body=order.map((k,i)=>`<div class="subsec ${i==0?'on':''}" id="qs-${k}">${sec[k]}</div>`).join('');
+ const note=`<p class="muted" style="margin:2px 0 12px">분기 자동생성 · 오늘 ${new Date().toISOString().slice(0,10)} 기준 · 데이터: 마스터 엑셀 + 02.경력증명 + config.json</p>`;
+ p.innerHTML=note+nav+body;
+ p.querySelector('.subnav').onclick=ev=>{const b=ev.target.closest('button');if(!b)return; p.querySelectorAll('.subnav button').forEach(x=>x.classList.remove('on'));b.classList.add('on'); p.querySelectorAll('.subsec').forEach(x=>x.classList.remove('on'));el('qs-'+b.dataset.s).classList.add('on');};
+}
+
+
+function renderSearch(D){
+ const all=[...D.records];
+ el('p-검색').innerHTML=`
+  <div class="card"><h2>통합 검색 DB <span class="cnt">${all.length}건 전수 검색</span></h2>
+   <div class="searchbar">
+     <input type="text" id="q" placeholder="용역명·발주처·담당업무·연도 등 검색어 입력" oninput="doSearch()">
+     <select id="qcat" onchange="doSearch()"><option value="">전체 영역</option>${Object.keys(CAT_COLORS).map(c=>`<option>${c}</option>`).join('')}</select>
+   </div>
+   <div class="muted" id="qcount"></div>
+   <div class="tbl-scroll" style="margin-top:8px"><table><thead><tr><th>영역</th><th>기간</th><th>용역명</th><th>발주처</th><th>분야</th><th>담당업무</th><th>일수</th></tr></thead>
+   <tbody id="qbody"></tbody></table></div></div>`;
+ window._ALL=all; doSearch();
+}
+function doSearch(){
+ const q=(el('q').value||'').toLowerCase().trim(), cat=el('qcat').value;
+ const rows=window._ALL.filter(r=>{
+  if(cat&&r.category!==cat)return false;
+  if(!q)return true;
+  return [r.name,r.client,r.duty,r.subfield,r.field,r.start,r.role].join(' ').toLowerCase().includes(q);
+ });
+ el('qcount').textContent=`${rows.length}건 표시`;
+ el('qbody').innerHTML=rows.slice(0,400).map(r=>`<tr><td>${tag(r.category)}</td><td>${esc(r.start)}~${esc(r.end)}</td>
+   <td>${esc(r.name)}</td><td>${esc(r.client)}</td><td>${esc(r.subfield||r.field)}</td><td>${esc(r.duty)}</td>
+   <td class="num">${r.days||''}</td></tr>`).join('')+(rows.length>400?`<tr><td colspan="7" class="muted">…상위 400건만 표시 (검색어를 좁혀주세요)</td></tr>`:'');
+}
+// 필터 헬퍼
+function filt(inp,cat){const q=inp.value.toLowerCase();document.querySelectorAll('#tb-'+cat+' tr').forEach(tr=>{tr.style.display=tr.textContent.toLowerCase().includes(q)?'':'none';});}
+function filtR(cat,q){q=q.toLowerCase();document.querySelectorAll('#tb-'+cat+' tr').forEach(tr=>{const y=tr.dataset._y;tr.dataset._q=tr.textContent.toLowerCase().includes(q)?'1':'0';applyR(tr);});}
+function filtY(cat,y){document.querySelectorAll('#tb-'+cat+' tr').forEach(tr=>{tr.dataset._yf=(!y||tr.dataset.y===y)?'1':'0';applyR(tr);});}
+function applyR(tr){tr.style.display=(tr.dataset._q!=='0'&&tr.dataset._yf!=='0')?'':'none';}
+
+// ── 데이터 로드: JS전역 → 실패시 fetch(json) ──
+if(window.CAREER_DATA){boot(window.CAREER_DATA);}
+else{fetch('data/career-data.json').then(r=>r.json()).then(boot).catch(e=>{
+  el('meta').innerHTML='<span style="color:#ffd">데이터 로드 실패 — convert.py로 data/career-data.js 생성 필요</span>';});}
+</script>
+</body>
+</html>
